@@ -373,7 +373,21 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+      
+  <style>
+  .order-btn {
+    background-color: #25D366;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
 
+  .order-btn:hover {
+    background-color: #128C7E;
+    color: #FFFFFF;
+  }
+  </style>
 </body>
 
 </html>
