@@ -77,7 +77,7 @@
                       <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Username</label>
                         <input class="form-control" type ="text" maxlength="25" name="username">
-                      </div> 
+                      </div>  
 
                       <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -238,9 +238,12 @@
               <p><?php echo $product['price_produk']; ?></p>
             </div>
             <h3><?php echo $product['name_product']; ?></h3>
-            <p>
+            <p class="mb-4">
               <?php echo $product['description']; ?>
             </p>
+            <a href="https://api.whatsapp.com/send/?phone=6281283857977&text&type=phone_number&app_absent=0" class="order-btn">
+                <i class="fab fa-whatsapp fa-2xl mx-2"></i> Pesan Melalui WhatsApp
+            </a>
           </div>
         </div>
       </div>
