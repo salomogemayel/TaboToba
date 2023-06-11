@@ -191,67 +191,67 @@
         
         <div class="container my-2" style="max-width: 900px;">
             <?php
-            include_once('config/autoload.php');
+include_once('config/autoload.php');
 
-            if (isset($_GET['product_id'])) {
-                $product_id = $_GET['product_id'];
+if (isset($_GET['product_id'])) {
+    $product_id = $_GET['product_id'];
 
-                $query = "SELECT * FROM product WHERE product_id = $product_id";
-                $result = mysqli_query($conn, $query);
-                $product = mysqli_fetch_assoc($result);
+    $query = "SELECT * FROM product WHERE product_id = $product_id";
+    $result = mysqli_query($conn, $query);
+    $product = mysqli_fetch_assoc($result);
 
-                if (isset($_POST['submit'])) {
-                    $name = $_POST['product_name'];
-                    $quantity = $_POST['product_quantity'];
-                    $price = $_POST['product_price'];
-                    $description = $_POST['description'];
+    if (isset($_POST['submit'])) {
+        $name = $_POST['product_name'];
+        $quantity = $_POST['product_quantity'];
+        $price = $_POST['product_price'];
+        $description = $_POST['description'];
 
-                    $query = "UPDATE product SET name_product='$name', quantity='$quantity', price_produk='$price', description='$description' WHERE product_id=$product_id";
-                    $result = mysqli_query($conn, $query);
+        $query = "UPDATE product SET name_product='$name', quantity='$quantity', price_produk='$price', description='$description' WHERE product_id=$product_id";
+        $result = mysqli_query($conn, $query);
 
-                    if ($result) {
-                        // Pengecekan upload gambar
-                        if (isset($_FILES['product_images']) && !empty($_FILES['product_images']['name'])) {
-                            $totalImages = count($_FILES['product_images']['name']);
-                            $imageUploadErrors = array();
+        if ($result) {
+            // Pengecekan upload gambar
+            if (isset($_FILES['product_images']) && $_FILES['product_images']['error'][0] !== UPLOAD_ERR_NO_FILE) {
+                $totalImages = count($_FILES['product_images']['name']);
+                $imageUploadErrors = array();
 
-                            // Pengulangan upload gambar
-                            for ($i = 0; $i < $totalImages; $i++) {
-                                $imageName = $_FILES['product_images']['name'][$i];
-                                $imageTmpName = $_FILES['product_images']['tmp_name'][$i];
-                                $imageType = $_FILES['product_images']['type'][$i];
+                // Pengulangan upload gambar
+                for ($i = 0; $i < $totalImages; $i++) {
+                    $imageName = $_FILES['product_images']['name'][$i];
+                    $imageTmpName = $_FILES['product_images']['tmp_name'][$i];
+                    $imageType = $_FILES['product_images']['type'][$i];
 
-                                // Pengecekan tipe gambar
-                                $allowedTypes = array('image/jpeg', 'image/png');
-                                if (in_array($imageType, $allowedTypes)) {
-                                    $imageData = file_get_contents($imageTmpName);
-                                    $imageData = mysqli_real_escape_string($conn, $imageData);
+                    // Pengecekan tipe gambar
+                    $allowedTypes = array('image/jpeg', 'image/png');
+                    if (in_array($imageType, $allowedTypes)) {
+                        $imageData = file_get_contents($imageTmpName);
+                        $imageData = mysqli_real_escape_string($conn, $imageData);
 
-                                    $insertQuery = "INSERT INTO product_image (product_id, image) VALUES ($product_id, '$imageData')";
-                                    $insertResult = mysqli_query($conn, $insertQuery);
+                        $insertQuery = "INSERT INTO product_image (product_id, image) VALUES ($product_id, '$imageData')";
+                        $insertResult = mysqli_query($conn, $insertQuery);
 
-                                    if (!$insertResult) {
-                                        $imageUploadErrors[] = "Error uploading image: $imageName";
-                                    }
-                                } else {
-                                    $imageUploadErrors[] = " File tidak sesuai : $imageName";
-                                }
-                            }
-
-                            if (!empty($imageUploadErrors)) {
-                                foreach ($imageUploadErrors as $error) {
-                                    echo '<div class="alert alert-danger mt-3" role="alert" style="z-index: 1;">' . $error . '</div>';
-                                }
-                            } else {
-                                echo '<div class="alert alert-success mt-3" role="alert" style="z-index: 1;">Produk berhasil diperbaharui.</div>';
-                            }
-                        } else {
-                            echo '<div class="alert alert-success mt-3" role="alert" style="z-index: 1;">Produk berhasil diperbaharui.</div>';
+                        if (!$insertResult) {
+                            $imageUploadErrors[] = "Error uploading image: $imageName";
                         }
+                    } else {
+                        $imageUploadErrors[] = "File tidak sesuai: $imageName";
                     }
                 }
+
+                if (!empty($imageUploadErrors)) {
+                    foreach ($imageUploadErrors as $error) {
+                        echo '<div class="alert alert-danger mt-3" role="alert" style="z-index: 1;">' . $error . '</div>';
+                    }
+                } else {
+                    echo '<div class="alert alert-success mt-3" role="alert" style="z-index: 1;">Produk berhasil diperbaharui.</div>';
+                }
+            } else {
+                echo '<div class="alert alert-success mt-3" role="alert" style="z-index: 1;">Produk berhasil diperbaharui.</div>';
             }
-            ?>
+        }
+    }
+}
+?>
 
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -354,6 +354,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </main><!-- End #main -->
 
         
