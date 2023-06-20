@@ -66,6 +66,13 @@
           <li><a href="produk.php">Produk</a></li>
           <li><a href="ulasan.php">Ulasan</a></li>
           <li><a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
+          <?php
+
+              if (isset($_SESSION['is_logged_in'])) {?>
+              <li><a href="keranjang.php"><i class="fa-solid fa-cart-shopping fa-2xl my-3" style="font-size: 20px;"></i></a></li>
+
+              <?php } 
+            ?>
            
             <?php
               if (!isset($_SESSION['is_logged_in'])){?>
@@ -276,13 +283,33 @@
     <div class="row">
       <div class="col-lg-3 col-md-6 footer-contact">
         <h3>Tabo Toba</h3>
+        <?php
+          $query = '  SELECT * FROM alamat ';
+          $result = $conn -> query($query);
+          $address = $result-> fetch_assoc();
+          
+          $alamat = $address['alamat'];   
+          $desa = $address['desa']; 
+          $kecamatan = $address['kecamatan']; 
+          $kabupaten = $address['kabupaten/kota']; 
+          $provinsi = $address['provinsi']; 
+          $kode_pos = $address['kode_pos'];                                          
+        ?>
         <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
+          <?php echo $address['alamat'] ?>,<br>
+          <?php echo $address['desa'] ?>,<br>
+          <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+          <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+        </p>
+        <?php
+          $query = '  SELECT nomor FROM nomor_telepon ';
+          $result = $conn -> query($query);
+          $no_telp = $result-> fetch_assoc();
+          
+          $nomor = $no_telp['nomor'];                                            
+        ?>
+        <p>
+          <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
         </p>
       </div>
 

@@ -51,9 +51,17 @@
           <li><a href="produk.php">Produk</a></li>
           <li><a class="active" href="ulasan.php">Ulasan</a></li>
           <li><a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
+
+          <?php
+              session_start();
+
+              if (isset($_SESSION['is_logged_in'])) {?>
+              <li><a href="keranjang.php"><i class="fa-solid fa-cart-shopping fa-2xl my-3" style="font-size: 20px;"></i></a></li>
+
+              <?php } 
+            ?>
            
             <?php
-              session_start();
 
               if (!isset($_SESSION['is_logged_in'])){?>
                 <button class="masuk-btn ms-3" id="myBtn">
@@ -155,74 +163,82 @@
   </header><!-- End Header -->
 
   
-    <main id="main">
+  <main id="main">
 
-        <br><br>
-        <section id="ulasan" class="ulasan">
-
-            <div class="container" data-aos="fade-up">
-
-                <div class="section-title">
-                    <h2 class="mt-4">Ulasan</h2>
-                    <p>Apa Kata Mereka ?</p>
-                </div>
-
-                <button class="masuk-btn me-0">
-                    <a href="form_ulasan.php" role="button" style="color: #ffff;">Buat Ulasan</a>
-                </button>  
-                
-
-                    <?php
-                        include_once('config/autoload.php');
-
-                        $query = '  SELECT r.*, u.username, p.name_product  
-                                    FROM review r
-                                    JOIN user u 
-                                    ON r.user_id = u.user_id
-                                    JOIN product p
-                                    ON r.product_id = p.product_id
-                                    WHERE `show` = 1
-                                    ORDER BY date DESC';
-                        
-                        $result = mysqli_query($conn, $query);
-
-                        while($row = mysqli_fetch_assoc($result)){?>
-
-                        <div class="swiper-slide">
-                            <div class="ulasan-wrap">
-                                <div class="ulasan-item">
-                                    <h3 class="ulasan-img"><i class="fa-regular fa-user fa-xl" style="color: black;"></i></h3>                        
-                                    <h3><?php echo $row["username"];?></h3>
-                                    <h4><?php echo $row["name_product"];?></h4>
-                                    <p>
-                                        <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                            <?php echo $row["review"];?>
-                                        <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                                    </p>
-
-                                    <div class="star-rate">
-                                        <?php
-                                            $rating = $row['rate'];
-                                            for ($i = 5; $i >= 1; $i--) {
-                                                if ($rating >= $i) {
-                                                    echo '<input class="ulasan" type="radio"' . $i . '" name="rating" value="' . $i . '" id="rating-' . $i . '" checked disabled /><label for="rating-' . $i . '"></label>';
-                                                } 
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End ulasan item -->
-                    <?php } ?>
-            </div>
-            
-            </div>
-          <div class="swiper-pagination"></div>
+<br><br>
+<section id="ulasan" class="ulasan">
+    <div class="container" data-aos="fade-up">
+        <div class="section-title">
+            <h2 class="mt-4">Ulasan</h2>
+            <p>Apa Kata Mereka ?</p>
         </div>
+        <button class="masuk-btn me-0">
+            <a href="form_ulasan.php" role="button" style="color: #ffff;">Buat Ulasan</a>
+        </button>  
+        <?php
+        include_once('config/autoload.php');
 
-        </section><!-- End ulasan Section -->
+        $query = 'SELECT r.*, u.username, p.name_product, r.img 
+                FROM review r
+                JOIN user u 
+                ON r.user_id = u.user_id
+                JOIN product p
+                ON r.product_id = p.product_id
+                WHERE `show` = 1
+                ORDER BY date DESC';
 
-    </main><!-- End #main -->
+        $result = mysqli_query($conn, $query);
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            ?>
+            <div class="swiper-slide">
+                <div class="ulasan-wrap">
+                    <div class="ulasan-item">
+                      <div class="row">
+                        <div class="col-md-7">
+                        <h3 class="ulasan-img"><i class="fa-regular fa-user fa-xl" style="color: black;"></i></h3>
+                        <h3><?php echo $row["username"]; ?></h3>
+                        <h4><?php echo $row["name_product"]; ?></h4>
+                        <p class="review-text">
+                            <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                            <?php echo $row["review"]; ?>
+                            <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                        </p>
+                        <div class="star-rate">
+                            <?php
+                            $rating = $row['rate'];
+                            for ($i = 5; $i >= 1; $i--) {
+                                if ($rating >= $i) {
+                                    echo '<input class="ulasan" type="radio" name="rating" value="' . $i . '" id="rating-' . $i . '" checked disabled /><label for="rating-' . $i . '"></label>';
+                                } else {
+                                    echo '<input class="ulasan" type="radio" name="rating" value="' . $i . '" id="rating-' . $i . '" disabled /><label for="rating-' . $i . '"></label>';
+                                }
+                            }
+                            ?>
+                        </div>
+                        </div>
+                        <div class="col-md-5">
+                        <?php
+                        if (!empty($row['img'])){
+                        $image_path = 'assets\img\gambar ulasan '; // Replace with the actual path to the folder where the images are stored
+                        $image_filename = $row['img'];
+                        $image_src = $image_path . $image_filename;
+                        ?>
+
+                        <img src="<?php echo $image_src; ?>" class="img-fluid" >
+                        <?php } ?>
+                        </div>
+                      </div>                        
+                    </div>
+                </div>
+            </div><!-- End ulasan item -->
+        <?php } ?>
+    </div>
+</section><!-- End ulasan Section -->
+
+
+</main><!-- End #main -->
+
 
     <!-- ======= Footer ======= -->
 <footer id="footer">
@@ -232,13 +248,33 @@
     <div class="row">
       <div class="col-lg-3 col-md-6 footer-contact">
         <h3>Tabo Toba</h3>
+        <?php
+          $query = '  SELECT * FROM alamat ';
+          $result = $conn -> query($query);
+          $address = $result-> fetch_assoc();
+          
+          $alamat = $address['alamat'];   
+          $desa = $address['desa']; 
+          $kecamatan = $address['kecamatan']; 
+          $kabupaten = $address['kabupaten/kota']; 
+          $provinsi = $address['provinsi']; 
+          $kode_pos = $address['kode_pos'];                                          
+        ?>
         <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
+          <?php echo $address['alamat'] ?>,<br>
+          <?php echo $address['desa'] ?>,<br>
+          <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+          <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+        </p>
+        <?php
+          $query = '  SELECT nomor FROM nomor_telepon ';
+          $result = $conn -> query($query);
+          $no_telp = $result-> fetch_assoc();
+          
+          $nomor = $no_telp['nomor'];                                            
+        ?>
+        <p>
+          <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
         </p>
       </div>
 
@@ -265,9 +301,23 @@
     </div>
   </div>
   <div class="social-links text-center text-md-right pt-3 pt-md-0">
-    <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-    <a href="https://www.instagram.com/tabo.toba/" class="instagram"><i class="bx bxl-instagram"></i></a>
-    <a href="https://api.whatsapp.com/send/?phone=6281283857977&text&type=phone_number&app_absent=0" class="whatsapp"><i class="bx bxl-whatsapp"></i></a>
+    <!-- <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a> -->
+    <?php
+      $query = '  SELECT link FROM instagram ';
+      $result = $conn -> query($query);
+      $instagram = $result-> fetch_assoc();
+      
+      $link = $instagram['link'];                                            
+     ?>
+    <a href="<?php echo $instagram['link']?>" class="instagram"><i class="bx bxl-instagram"></i></a>
+    <?php
+      $query = '  SELECT link FROM whatsapp ';
+      $result = $conn -> query($query);
+      $WhatsApp = $result-> fetch_assoc();
+      
+      $link = $WhatsApp['link'];                                            
+     ?>
+    <a href=" <?php echo $WhatsApp['link']; ?> " class="whatsapp"><i class="bx bxl-whatsapp"></i></a>
   </div>
 </div>
 </footer><!-- End Footer -->
@@ -294,6 +344,12 @@
           document.getElementById("myForm").style.display = "none";
           }
       </script>
+
+      <style>
+        .review-text {
+          overflow-wrap: break-word; 
+        }
+      </style>
 
     </body>
 

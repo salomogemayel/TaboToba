@@ -178,6 +178,18 @@
                 <li><a href="kelola_ulasan.php"><i class="fas fa-comment mx-2"></i> Ulasan</a></li>
                 <li><a href="kode_otorisasi.php"><i class="fas fa-key mx-2"></i> Kode Otorisasi</a></li>
                 <li><a href="data_akun.php"><i class="fas fa-users mx-2"></i> Data akun</a></li>
+                <li><a href="riwayat_pemesanan.php"><i class="fas fa-shopping-cart mx-2"></i> Riwayat Pemesanan</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-circle-info mx-2"></i> Kelola Informasi
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="kelola_alamat.php"><i class="fas fa-location-dot mx-2"></i> Alamat</a></li>
+                        <li><a href="kelola_nomor_telepon.php"><i class="fas fa-phone mx-2"></i> Nomor Telepon</a></li>
+                        <li><a href="kelola_instagram.php"><i class="fa-brands fa-square-instagram fa-xl mx-2"></i> Instagram</a></li>
+                        <li><a href="kelola_whatsapp.php"><i class="fa-brands fa-square-whatsapp fa-xl mx-2"></i> WhatsApp</a></li>
+                    </ul>
+                </li>
                 <li><a href="index.php"><i class="fas fa-home mx-2"></i> Beranda Tabo Toba</a></li>
                 <li><a href="logout.php"><i class="fas fa-sign-out-alt mx-2"></i> Keluar</a></li>
             </ul>
@@ -190,7 +202,7 @@
     <main id="main">
         
         <div class="container my-2" style="max-width: 900px;">
-            <?php
+        <?php
 include_once('config/autoload.php');
 
 if (isset($_GET['product_id'])) {
@@ -206,52 +218,76 @@ if (isset($_GET['product_id'])) {
         $price = $_POST['product_price'];
         $description = $_POST['description'];
 
-        $query = "UPDATE product SET name_product='$name', quantity='$quantity', price_produk='$price', description='$description' WHERE product_id=$product_id";
-        $result = mysqli_query($conn, $query);
+        // Check if the new product name already exists in the database, excluding the current product being edited
+        $existingQuery = "SELECT COUNT(*) FROM product WHERE name_product = ? AND product_id != ?";
+        $stmt = mysqli_prepare($conn, $existingQuery);
+        mysqli_stmt_bind_param($stmt, "si", $name, $product_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $existingCount);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
 
-        if ($result) {
-            // Pengecekan upload gambar
-            if (isset($_FILES['product_images']) && $_FILES['product_images']['error'][0] !== UPLOAD_ERR_NO_FILE) {
-                $totalImages = count($_FILES['product_images']['name']);
-                $imageUploadErrors = array();
+        if ($existingCount > 0) {
+            $error = "Produk dengan nama yang sama telah ditambahkan.";
+            echo '<div class="alert alert-danger mt-3" role="alert" style="z-index: 1;">' . $error . '</div>';
+        } else {
+            $query = "UPDATE product SET name_product=?, quantity=?, price_produk=?, description=? WHERE product_id=?";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "sissi", $name, $quantity, $price, $description, $product_id);
+            $result = mysqli_stmt_execute($stmt);
 
-                // Pengulangan upload gambar
-                for ($i = 0; $i < $totalImages; $i++) {
-                    $imageName = $_FILES['product_images']['name'][$i];
-                    $imageTmpName = $_FILES['product_images']['tmp_name'][$i];
-                    $imageType = $_FILES['product_images']['type'][$i];
+            if ($result) {
+                // Pengecekan upload gambar
+                if (isset($_FILES['product_images']) && $_FILES['product_images']['error'][0] !== UPLOAD_ERR_NO_FILE) {
+                    $totalImages = count($_FILES['product_images']['name']);
+                    $imageUploadErrors = array();
 
-                    // Pengecekan tipe gambar
-                    $allowedTypes = array('image/jpeg', 'image/png');
-                    if (in_array($imageType, $allowedTypes)) {
-                        $imageData = file_get_contents($imageTmpName);
-                        $imageData = mysqli_real_escape_string($conn, $imageData);
+                    // Pengulangan upload gambar
+                    for ($i = 0; $i < $totalImages; $i++) {
+                        $imageName = $_FILES['product_images']['name'][$i];
+                        $imageTmpName = $_FILES['product_images']['tmp_name'][$i];
+                        $imageType = $_FILES['product_images']['type'][$i];
 
-                        $insertQuery = "INSERT INTO product_image (product_id, image) VALUES ($product_id, '$imageData')";
-                        $insertResult = mysqli_query($conn, $insertQuery);
+                        // Pengecekan tipe gambar
+                        $allowedTypes = array('image/jpeg', 'image/png');
+                        if (in_array($imageType, $allowedTypes)) {
+                            $imageData = file_get_contents($imageTmpName);
+                            $imageData = mysqli_real_escape_string($conn, $imageData);
 
-                        if (!$insertResult) {
-                            $imageUploadErrors[] = "Error uploading image: $imageName";
+                            $insertQuery = "INSERT INTO product_image (product_id, image) VALUES ($product_id, '$imageData')";
+                            $insertResult = mysqli_query($conn, $insertQuery);
+
+                            if (!$insertResult) {
+                                $imageUploadErrors[] = "Error uploading image: $imageName";
+                            }
+                        } else {
+                            $imageUploadErrors[] = "File tidak sesuai: $imageName";
+                        }
+                    }
+
+                    if (!empty($imageUploadErrors)) {
+                        foreach ($imageUploadErrors as $error) {
+                            echo '<div class="alert alert-danger mt-3" role="alert" style="z-index: 1;">' . $error . '</div>';
                         }
                     } else {
-                        $imageUploadErrors[] = "File tidak sesuai: $imageName";
-                    }
-                }
-
-                if (!empty($imageUploadErrors)) {
-                    foreach ($imageUploadErrors as $error) {
-                        echo '<div class="alert alert-danger mt-3" role="alert" style="z-index: 1;">' . $error . '</div>';
+                        echo '<script type="text/javascript">'; 
+                        echo 'alert("Produk berhasil diperbaharui.");'; 
+                        echo 'window.location.href = "kelola_produk.php";';
+                        echo '</script>';
                     }
                 } else {
-                    echo '<div class="alert alert-success mt-3" role="alert" style="z-index: 1;">Produk berhasil diperbaharui.</div>';
+                    echo '<script type="text/javascript">'; 
+                    echo 'alert("Produk berhasil diperbaharui.");'; 
+                    echo 'window.location.href = "kelola_produk.php";';
+                    echo '</script>';
                 }
-            } else {
-                echo '<div class="alert alert-success mt-3" role="alert" style="z-index: 1;">Produk berhasil diperbaharui.</div>';
             }
+            mysqli_stmt_close($stmt);
         }
     }
 }
 ?>
+
 
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -367,13 +403,33 @@ if (isset($_GET['product_id'])) {
     <div class="row">
       <div class="col-lg-3 col-md-6 footer-contact">
         <h3>Tabo Toba</h3>
+        <?php
+          $query = '  SELECT * FROM alamat ';
+          $result = $conn -> query($query);
+          $address = $result-> fetch_assoc();
+          
+          $alamat = $address['alamat'];   
+          $desa = $address['desa']; 
+          $kecamatan = $address['kecamatan']; 
+          $kabupaten = $address['kabupaten/kota']; 
+          $provinsi = $address['provinsi']; 
+          $kode_pos = $address['kode_pos'];                                          
+        ?>
         <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
+          <?php echo $address['alamat'] ?>,<br>
+          <?php echo $address['desa'] ?>,<br>
+          <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+          <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+        </p>
+        <?php
+          $query = '  SELECT nomor FROM nomor_telepon ';
+          $result = $conn -> query($query);
+          $no_telp = $result-> fetch_assoc();
+          
+          $nomor = $no_telp['nomor'];                                            
+        ?>
+        <p>
+          <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
         </p>
       </div>
 
@@ -489,6 +545,8 @@ if (isset($_GET['product_id'])) {
                 window.history.replaceState(null, null, window.location.href);
             }
         </script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
     </body>
 
 </html>

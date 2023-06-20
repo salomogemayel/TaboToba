@@ -181,6 +181,18 @@
                 <li><a href="kelola_ulasan.php"><i class="fas fa-comment mx-2"></i> Ulasan</a></li>
                 <li><a href="kode_otorisasi.php"><i class="fas fa-key mx-2"></i> Kode Otorisasi</a></li>
                 <li><a href="data_akun.php"><i class="fas fa-users mx-2"></i> Data akun</a></li>
+                <li><a href="riwayat_pemesanan.php"><i class="fas fa-shopping-cart mx-2"></i> Riwayat Pemesanan</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-circle-info mx-2"></i> Kelola Informasi
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="kelola_alamat.php"><i class="fas fa-location-dot mx-2"></i> Alamat</a></li>
+                        <li><a href="kelola_nomor_telepon.php"><i class="fas fa-phone mx-2"></i> Nomor Telepon</a></li>
+                        <li><a href="kelola_instagram.php"><i class="fa-brands fa-square-instagram fa-xl mx-2"></i> Instagram</a></li>
+                        <li><a href="kelola_whatsapp.php"><i class="fa-brands fa-square-whatsapp fa-xl mx-2"></i> WhatsApp</a></li>
+                    </ul>
+                </li>
                 <li><a href="index.php"><i class="fas fa-home mx-2"></i> Beranda Tabo Toba</a></li>
                 <li><a href="logout.php"><i class="fas fa-sign-out-alt mx-2"></i> Keluar</a></li>
             </ul>
@@ -213,64 +225,87 @@
 <footer id="footer">
 
 <div class="footer-top">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-md-6 footer-contact">
-        <h3>Tabo Toba</h3>
-        <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
-        </p>
-      </div>
+<div class="container">
+<div class="row">
+<div class="col-lg-3 col-md-6 footer-contact">
+<h3>Tabo Toba</h3>
+<?php
+  $query = '  SELECT * FROM alamat ';
+  $result = $conn -> query($query);
+  $address = $result-> fetch_assoc();
+  
+  $alamat = $address['alamat'];   
+  $desa = $address['desa']; 
+  $kecamatan = $address['kecamatan']; 
+  $kabupaten = $address['kabupaten/kota']; 
+  $provinsi = $address['provinsi']; 
+  $kode_pos = $address['kode_pos'];                                          
+?>
+<p>
+  <?php echo $address['alamat'] ?>,<br>
+  <?php echo $address['desa'] ?>,<br>
+  <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+  <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+</p>
+<?php
+  $query = '  SELECT nomor FROM nomor_telepon ';
+  $result = $conn -> query($query);
+  $no_telp = $result-> fetch_assoc();
+  
+  $nomor = $no_telp['nomor'];                                            
+?>
+<p>
+  <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
+</p>
+</div>
 
-      <div class="col-lg-4  col-md-6 footer-links">
-        <ul>
-          <li><i class="bx bx-chevron-right"></i> <a href="index.php">Beranda</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="produk.php">Produk</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="Ulasan.php">Ulasan</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
-        </ul>
-      </div>
-      <div class="col-lg-2  col-md-6 footer-newsletter ms-auto mb-auto">
-        <img height="130px" src="assets/img/TaboTobaLogo.png">
-      </div>
-    </div>
-  </div>
+<div class="col-lg-4  col-md-6 footer-links">
+<ul>
+  <li><i class="bx bx-chevron-right"></i> <a href="index.php">Beranda</a></li>
+  <li><i class="bx bx-chevron-right"></i> <a href="produk.php">Produk</a></li>
+  <li><i class="bx bx-chevron-right"></i> <a href="Ulasan.php">Ulasan</a></li>
+  <li><i class="bx bx-chevron-right"></i> <a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
+</ul>
+</div>
+<div class="col-lg-2  col-md-6 footer-newsletter ms-auto mb-auto">
+<img height="130px" src="assets/img/TaboTobaLogo.png">
+</div>
+</div>
+</div>
 </div>
 
 <div class="container d-md-flex py-4">
 
-  <div class="me-md-auto text-center text-md-start">
+<div class="me-md-auto text-center text-md-start">
     <div class="copyright">
-      &copy; Copyright <strong><span>Tabo Toba</span></strong>. All Rights Reserved
+    &copy; Copyright <strong><span>Tabo Toba</span></strong>. All Rights Reserved
     </div>
-  </div>
-  <div class="social-links text-center text-md-right pt-3 pt-md-0">
+</div>
+<div class="social-links text-center text-md-right pt-3 pt-md-0">
     <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
     <a href="https://www.instagram.com/tabo.toba/" class="instagram"><i class="bx bxl-instagram"></i></a>
     <a href="https://api.whatsapp.com/send/?phone=6281283857977&text&type=phone_number&app_absent=0" class="whatsapp"><i class="bx bxl-whatsapp"></i></a>
-  </div>
 </div>
-</footer><!-- End Footer -->
-        <script>
-            var btn = document.querySelector('.toggle');
-            var btnst = true;
-            btn.onclick = function () {
-                if (btnst == true) {
-                    document.querySelector('.toggle span').classList.add('toggle');
-                    document.getElementById('sidebar').classList.add('sidebarshow');
-                    btnst = false;
-                } else if (btnst == false) {
-                    document.querySelector('.toggle span').classList.remove('toggle');
-                    document.getElementById('sidebar').classList.remove('sidebarshow');
-                    btnst = true;
-                }
-            }
-        </script>
+</div>
+</footer>
+<!-- End Footer -->
+<script>
+    var btn = document.querySelector('.toggle');
+    var btnst = true;
+    btn.onclick = function () {
+        if (btnst == true) {
+            document.querySelector('.toggle span').classList.add('toggle');
+            document.getElementById('sidebar').classList.add('sidebarshow');
+            btnst = false;
+        } else if (btnst == false) {
+            document.querySelector('.toggle span').classList.remove('toggle');
+            document.getElementById('sidebar').classList.remove('sidebarshow');
+            btnst = true;
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>
 
 </html>

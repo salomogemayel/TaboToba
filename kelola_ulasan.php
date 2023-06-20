@@ -32,9 +32,6 @@
         <link href="assets/css/style.css" rel="stylesheet">
 
         <style type="text/css">
-            /*--------------------------------------------------------------
-            # Display Rate Ulasan
-            --------------------------------------------------------------*/
             input[type="radio"] {
             display: none;
             }
@@ -46,9 +43,7 @@
             font-size: 30px;
             color: rgb(255, 217, 0);
             }
-
         </style>
-
     </head>
 
     <?php
@@ -71,84 +66,79 @@
 
     <body>
         <style type="text/css">                        
-        .header {
-            background:#fff;
-            color: #000000;
-            box-shadow:0 2px 5px rgba(0,0,0,0.2);
-            padding: 15px 20px;
-            width:100%;
-            height: 90px;
-            position:fixed;
-            top:0;
-            left:0;
-            z-index:9;
-        }
-        .header .header_in{
-            color: #000000;
-        }
-
-        #toggle {
-            background:transparent;
-            border:none;
-            width:30px;
-            height:30px;
-            cursor:pointer; 
-            outline:0;
-        }
-
-        .sidebar {
-            background:#fff;
-            width:235px;
-            position:fixed;
-            top: 50px;
-            left:-235px;
-            height:100%;
-            box-shadow:0 2px 8px rgba(0,0,0,0.2);
-            padding: 20px;
-            padding-top:50px;
-            transition:all 0.3s ease-out;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar ul li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .sidebar ul li a {
-            color: #333;
-        }
-
-        .sidebarshow {
-            left:0;
-        }
-        .content {
-                margin-top: 50px;
-                padding: 20px;
-                border-top: 1px solid #ddd;
-                border-right: 1px solid #ddd;
-                border-bottom: 1px solid #ddd;
+            .header {
+                background:#fff;
+                color: #000000;
+                box-shadow:0 2px 5px rgba(0,0,0,0.2);
+                padding: 15px 20px;
+                width:100%;
+                height: 90px;
+                position:fixed;
+                top:0;
+                left:0;
+                z-index:9;
             }
-        .waktu{
-            align-items: end;
-        }
-        .navbar{
-            justify-content:center;
-            margin-top: 20px;
-        }
-        
-        
+            .header .header_in{
+                color: #000000;
+            }
 
+            #toggle {
+                background:transparent;
+                border:none;
+                width:30px;
+                height:30px;
+                cursor:pointer; 
+                outline:0;
+            }
+
+            .sidebar {
+                background:#fff;
+                width:235px;
+                position:fixed;
+                top: 50px;
+                left:-235px;
+                height:100%;
+                box-shadow:0 2px 8px rgba(0,0,0,0.2);
+                padding: 20px;
+                padding-top:50px;
+                transition:all 0.3s ease-out;
+            }
+
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .sidebar ul li {
+                padding: 10px 0;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .sidebar ul li a {
+                color: #333;
+            }
+
+            .sidebarshow {
+                left:0;
+            }
+            .content {
+                    margin-top: 50px;
+                    padding: 20px;
+                    border-top: 1px solid #ddd;
+                    border-right: 1px solid #ddd;
+                    border-bottom: 1px solid #ddd;
+                }
+            .waktu{
+                align-items: end;
+            }
+            .navbar{
+                justify-content:center;
+                margin-top: 20px;
+            }     
         </style>
-
-        
-
     </head>
+
     <body>
         <header id="header" class="fixed-top">
             <div class="container d-flex align-items-center">
@@ -180,199 +170,206 @@
                 <li><a href="kelola_ulasan.php"><i class="fas fa-comment mx-2"></i> Ulasan</a></li>
                 <li><a href="kode_otorisasi.php"><i class="fas fa-key mx-2"></i> Kode Otorisasi</a></li>
                 <li><a href="data_akun.php"><i class="fas fa-users mx-2"></i> Data akun</a></li>
+                <li><a href="riwayat_pemesanan.php"><i class="fas fa-shopping-cart mx-2"></i> Riwayat Pemesanan</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-circle-info mx-2"></i> Kelola Informasi
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="kelola_alamat.php"><i class="fas fa-location-dot mx-2"></i> Alamat</a></li>
+                        <li><a href="kelola_nomor_telepon.php"><i class="fas fa-phone mx-2"></i> Nomor Telepon</a></li>
+                        <li><a href="kelola_instagram.php"><i class="fa-brands fa-square-instagram fa-xl mx-2"></i> Instagram</a></li>
+                        <li><a href="kelola_whatsapp.php"><i class="fa-brands fa-square-whatsapp fa-xl mx-2"></i> WhatsApp</a></li>
+                    </ul>
+                </li>
                 <li><a href="index.php"><i class="fas fa-home mx-2"></i> Beranda Tabo Toba</a></li>
                 <li><a href="logout.php"><i class="fas fa-sign-out-alt mx-2"></i> Keluar</a></li>
             </ul>
         </div>
 
-        <div class="content">
-            
-        <div class="container-lg mt-4">
-            
-            <h1 class="">Kelola Ulasan</h1>
-            <!-- <a class="btn btn-secondary" href="ulasan_tersimpan.php" role="button">Ulasan Tersimpan</a> -->
-            <table class="table">
-                <thead>
-                   <tr>
-                        <th scope="col">
-                        </th>
-                        <th scope="col"></th>
-                   </tr>
-                </thead>
-            <?php
-                        
+        <div class="content">            
+            <div class="container-lg mt-4">            
+                <h1 class="">Kelola Ulasan</h1>
+                <style>
+                    .review-text {
+                        max-width: 400px; 
+                        overflow-wrap: break-word; 
+                    }
+                </style>
 
-                        if (isset($_POST['delete_review'])) {
-                            $review_id = $_POST['review_id'];
-                            $delete_query = "DELETE FROM review WHERE id_review = $review_id";
-                            mysqli_query($conn, $delete_query);
-                        }
-                        else if (isset($_POST['show_review'])) {
-                            $review_id = $_POST['review_id'];
-                            $update_query = "UPDATE review SET `show` = 1 WHERE id_review = $review_id";
-                            mysqli_query($conn, $update_query);
-                        }
-                        else if (isset($_POST['hide_review'])) {
-                            $review_id = $_POST['review_id'];
-                            $update_query = "UPDATE review SET `show` = 0 WHERE id_review = $review_id";
-                            mysqli_query($conn, $update_query);
-                        }
-                        // else if (isset($_POST['save_review'])) {
-                        //     $review_id = $_POST['review_id'];
-                        //     $update_query = "UPDATE review SET `show` = 2 WHERE id_review = $review_id";
-                        //     mysqli_query($conn, $update_query);
-                        // }
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <?php
+                    if (isset($_POST['show_review'])) {
+                        $review_id = $_POST['review_id'];
+                        $update_query = "UPDATE review SET `show` = 1 WHERE id_review = $review_id";
+                        mysqli_query($conn, $update_query);
+                    } else if (isset($_POST['hide_review'])) {
+                        $review_id = $_POST['review_id'];
+                        $update_query = "UPDATE review SET `show` = 0 WHERE id_review = $review_id";
+                        mysqli_query($conn, $update_query);
+                    }
 
-                        $query = 'SELECT r.*, u.username, p.name_product  
-                                    FROM review r
-                                    JOIN user u 
-                                    ON r.user_id = u.user_id
-                                    JOIN product p
-                                    ON r.product_id = p.product_id
-                                    WHERE `show` IN (0, 1)
-                                    ORDER BY date DESC';
-                        
-                        $result = mysqli_query($conn, $query);
+                    $query = 'SELECT r.*, u.username, p.name_product  
+                                FROM review r
+                                JOIN user u 
+                                ON r.user_id = u.user_id
+                                JOIN product p
+                                ON r.product_id = p.product_id
+                                WHERE `show` IN (0, 1)
+                                ORDER BY date DESC';
 
-                        while($row = mysqli_fetch_assoc($result)){?>
+                    $result = mysqli_query($conn, $query);
 
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <h4><?php echo $row["username"]; ?></h4>
-                                        <h6><?php echo $row["name_product"]; ?></h6>
-                                        <p><?php echo $row["review"]; ?></p>
-                                        <div class="star-rate">
-                                            <?php
-                                                $rating = $row['rate'];
-                                                for ($i = 5; $i >= 1; $i--) {
-                                                    if ($rating >= $i) {
-                                                        echo '<input class="ulasan" type="radio"' . $i . '" name="rating" value="' . $i . '" id="rating-' . $i . '" checked disabled /><label for="rating-' . $i . '"></label>';
-                                                    } 
-                                                }
-                                            ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-md-3 my-1">
-                                                <form method="post" action="">
-                                                    <input type="hidden" name="delete_review" value="1">
-                                                    <input type="hidden" name="review_id" value="<?php echo $row['id_review']; ?>">
-                                                    <button type="submit" class="btn btn-danger" style="width: 100px; height: 35px;">
-                                                        <p><i class="fas fa-trash"></i> Hapus</p>
-                                                    </button>
-                                                </form> 
-                                            </div>
-                                            <!-- <div class="col-md-3 my-1">
-                                                <form method="post" action="">
-                                                    <input type="hidden" name="save_review" value="1">
-                                                    <input type="hidden" name="review_id" value="<?php //echo $row['id_review']; ?>">
-                                                    <button type="submit" class="btn btn-success" style="width: 110px; height: 35px;">
-                                                        <p><i class="fas fa-floppy-disk"></i> Simpan</p>
-                                                    </button>
-                                                </form> 
-                                            </div> -->
-                                            <div class="col-md-4 my-1">
-                                                <?php
-                                                    if($row['show'] == 1){?>
-                                                        <form method="post" action="">
-                                                            <input type="hidden" name="hide_review" value="1">
-                                                            <input type="hidden" name="review_id" value="<?php echo $row['id_review']; ?>">
-                                                            <button type="submit" class="btn btn-primary" style="height: 35px;">
-                                                                <p><i class="fas fa-eye"></i> Tampil</p>
-                                                            </button>
-                                                        </form>  
-                                                   <?php } else { ?>
-                                                        <form method="post" action="">
-                                                            <input type="hidden" name="show_review" value="1">
-                                                            <input type="hidden" name="review_id" value="<?php echo $row['id_review']; ?>">
-                                                            <button type="submit" class="btn btn-primary" style="height: 35px;">
-                                                                <p><i class="fas fa-eye-slash"></i> Tidak Tampil</p>
-                                                            </button>
-                                                        </form> 
-                                                <?php } ?>
-
-                                                <!-- <form method="post" action="">
-                                                    <input type="hidden" name="update_review" value="1">
-                                                    <input type="hidden" name="review_id" value="<?php  ?>">
-                                                    <button type="submit" class="btn btn-primary" style="height: 35px;">
-                                                        <p><i class="fas fa-list"></i> Tampilkan</p>
-                                                    </button>
-                                                </form>  -->
-                                            </div>
-                                            
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+                    while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                        <tbody>
+                            <tr>
+                                <td>                    
+                                    <?php
+                                    if (!empty($row['img'])) {
+                                        $image_path = 'assets\img\gambar ulasan '; // Replace with the actual path to the folder where the images are stored
+                                        $image_filename = $row['img'];
+                                        $image_src = $image_path . $image_filename; ?>
+                                        <img src="<?php echo $image_src; ?>" class="img-fluid" style="max-width: 500px; max-height: 200px;">
+                                    <?php } ?>
+                                </td>   
+                                <td class="review-text">
+                                    <h4><?php echo $row["username"]; ?></h4>
+                                    <h6><?php echo $row["name_product"]; ?></h6>
+                                    <p><?php echo nl2br($row["review"]); ?></p> <!-- Use nl2br to convert newlines to <br> tags -->
+                                    <div class="star-rate">
+                                        <?php
+                                        $rating = $row['rate'];
+                                        for ($i = 5; $i >= 1; $i--) {
+                                            if ($rating >= $i) {
+                                                echo '<input class="ulasan" type="radio"' . $i . '" name="rating" value="' . $i . '" id="rating-' . $i . '" checked disabled /><label for="rating-' . $i . '"></label>';
+                                            }
+                                        }
+                                        ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php
+                                    if ($row['show'] == 1) {
+                                    ?>
+                                        <form method="post" action="">
+                                            <input type="hidden" name="hide_review" value="1">
+                                            <input type="hidden" name="review_id" value="<?php echo $row['id_review']; ?>">
+                                            <button type="submit" class="btn btn-primary" style="height: 35px;">
+                                                <p><i class="fas fa-eye"></i> Tampil</p>
+                                            </button>
+                                        </form>
+                                    <?php } else { ?>
+                                        <form method="post" action="">
+                                            <input type="hidden" name="show_review" value="1">
+                                            <input type="hidden" name="review_id" value="<?php echo $row['id_review']; ?>">
+                                            <button type="submit" class="btn btn-primary" style="height: 35px;">
+                                                <p><i class="fas fa-eye-slash"></i> Tidak Tampil</p>
+                                            </button>
+                                        </form>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        </tbody>
                     <?php } ?>
-                
-                    </table>                                
+                </table>
             </div>
         </div>
 
         <!-- ======= Footer ======= -->
-<footer id="footer">
+        <footer id="footer">
+
+        <footer id="footer">
 
 <div class="footer-top">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-md-6 footer-contact">
-        <h3>Tabo Toba</h3>
-        <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
-        </p>
-      </div>
+<div class="container">
+<div class="row">
+<div class="col-lg-3 col-md-6 footer-contact">
+<h3>Tabo Toba</h3>
+<?php
+  $query = '  SELECT * FROM alamat ';
+  $result = $conn -> query($query);
+  $address = $result-> fetch_assoc();
+  
+  $alamat = $address['alamat'];   
+  $desa = $address['desa']; 
+  $kecamatan = $address['kecamatan']; 
+  $kabupaten = $address['kabupaten/kota']; 
+  $provinsi = $address['provinsi']; 
+  $kode_pos = $address['kode_pos'];                                          
+?>
+<p>
+  <?php echo $address['alamat'] ?>,<br>
+  <?php echo $address['desa'] ?>,<br>
+  <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+  <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+</p>
+<?php
+  $query = '  SELECT nomor FROM nomor_telepon ';
+  $result = $conn -> query($query);
+  $no_telp = $result-> fetch_assoc();
+  
+  $nomor = $no_telp['nomor'];                                            
+?>
+<p>
+  <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
+</p>
+</div>
 
-      <div class="col-lg-4  col-md-6 footer-links">
-        <ul>
-          <li><i class="bx bx-chevron-right"></i> <a href="index.php">Beranda</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="produk.php">Produk</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="Ulasan.php">Ulasan</a></li>
-          <li><i class="bx bx-chevron-right"></i> <a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
-        </ul>
-      </div>
-      <div class="col-lg-2  col-md-6 footer-newsletter ms-auto mb-auto">
-        <img height="130px" src="assets/img/TaboTobaLogo.png">
-      </div>
-    </div>
-  </div>
+<div class="col-lg-4  col-md-6 footer-links">
+<ul>
+  <li><i class="bx bx-chevron-right"></i> <a href="index.php">Beranda</a></li>
+  <li><i class="bx bx-chevron-right"></i> <a href="produk.php">Produk</a></li>
+  <li><i class="bx bx-chevron-right"></i> <a href="Ulasan.php">Ulasan</a></li>
+  <li><i class="bx bx-chevron-right"></i> <a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
+</ul>
+</div>
+<div class="col-lg-2  col-md-6 footer-newsletter ms-auto mb-auto">
+<img height="130px" src="assets/img/TaboTobaLogo.png">
+</div>
+</div>
+</div>
 </div>
 
 <div class="container d-md-flex py-4">
 
-  <div class="me-md-auto text-center text-md-start">
+<div class="me-md-auto text-center text-md-start">
     <div class="copyright">
-      &copy; Copyright <strong><span>Tabo Toba</span></strong>. All Rights Reserved
+    &copy; Copyright <strong><span>Tabo Toba</span></strong>. All Rights Reserved
     </div>
-  </div>
-  <div class="social-links text-center text-md-right pt-3 pt-md-0">
+</div>
+<div class="social-links text-center text-md-right pt-3 pt-md-0">
     <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
     <a href="https://www.instagram.com/tabo.toba/" class="instagram"><i class="bx bxl-instagram"></i></a>
     <a href="https://api.whatsapp.com/send/?phone=6281283857977&text&type=phone_number&app_absent=0" class="whatsapp"><i class="bx bxl-whatsapp"></i></a>
-  </div>
 </div>
-</footer><!-- End Footer -->
-        <script>
-            var btn = document.querySelector('.toggle');
-                var btnst = true;
-                btn.onclick = function() {
-                if(btnst == true) {
-                    document.querySelector('.toggle span').classList.add('toggle');
-                    document.getElementById('sidebar').classList.add('sidebarshow');
-                    btnst = false;
-                }else if(btnst == false) {
-                    document.querySelector('.toggle span').classList.remove('toggle');
-                    document.getElementById('sidebar').classList.remove('sidebarshow');
-                    btnst = true;
-                }
-                }
-        </script>                                 
+</div>
+</footer>
+<!-- End Footer -->
+<script>
+    var btn = document.querySelector('.toggle');
+    var btnst = true;
+    btn.onclick = function () {
+        if (btnst == true) {
+            document.querySelector('.toggle span').classList.add('toggle');
+            document.getElementById('sidebar').classList.add('sidebarshow');
+            btnst = false;
+        } else if (btnst == false) {
+            document.querySelector('.toggle span').classList.remove('toggle');
+            document.getElementById('sidebar').classList.remove('sidebarshow');
+            btnst = true;
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>                           
     </body>
 </html>

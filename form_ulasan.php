@@ -1,15 +1,4 @@
-<?php
-  include_once('config/autoload.php');
 
-  session_start();
-  
-  if (!isset($_SESSION['is_logged_in'])){
-    echo '<script type="text/javascript">'; 
-    echo 'alert("Anda harus login terlebih dahulu sebelum membuat ulasan");'; 
-    echo 'window.location.href = "index.php";';
-    echo '</script>';
-  }
-?>
 
 <!DOCTYPE html>
     <html lang="en">
@@ -38,6 +27,7 @@
     <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="sweetalert2.min.css">
 
     <!-- CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -46,10 +36,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/2.9.0/jquery.raty.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/2.9.0/jquery.raty.min.js"></script>
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     </head>
 
     <body>
+    <?php
+include_once('config/autoload.php');
+session_start();
+  
+if (!isset($_SESSION['is_logged_in'])){ ?>
+  <script type="text/javascript"> 
+    Swal.fire({
+      icon: 'warning',
+      title: 'Login Diperlukan',
+      text: 'Anda harus masuk terlebih dahulu sebelum membuat ulasan !',
+      onClose: function() {
+        window.location.href = "ulasan.php";
+      }
+    });
+  </script>
+<?php exit(); } ?>
+
 
     <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -66,8 +74,15 @@
         <ul>
           <li><a href="index.php">Beranda</a></li>
           <li><a href="produk.php">Produk</a></li>
-          <li><a href="ulasan.php">Ulasan</a></li>
+          <li><a class="active" href="ulasan.php">Ulasan</a></li>
           <li><a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
+          <?php
+
+              if (isset($_SESSION['is_logged_in'])) {?>
+              <li><a href="keranjang.php"><i class="fa-solid fa-cart-shopping fa-2xl my-3" style="font-size: 20px;"></i></a></li>
+
+              <?php } 
+            ?>
            
             <?php
               if (!isset($_SESSION['is_logged_in'])){?>
@@ -177,7 +192,7 @@
       
         <h1 class="mt-5">Buat Ulasan</h1>
         <h6>Beri penilaian terhadap produk kami</h6>
-        <form class="mt-4" method="post" action="submit_ulasan_proses.php">
+        <form class="mt-4" method="post" enctype="multipart/form-data" action="submit_ulasan_proses.php">
             <input type="hidden" name="id" value="<?php echo $data['user_id']; ?>">
 
             <label for="product">Pilih produk untuk diulas :</label><br>
@@ -214,6 +229,11 @@
                     <label for="star1"></label>
                 </div>
             </div>
+            <br><br><br>
+            
+
+            <label for="image" class="mt-2">Unggah Gambar (Opsional):</label><br>
+            <input class="form-control mt-3" type="file" id="image" name="image">
 
           <br><br><br><br>
           <input class="form-control" id="submit" type="submit" value="Kirim Ulasan" >
@@ -251,13 +271,33 @@
     <div class="row">
       <div class="col-lg-3 col-md-6 footer-contact">
         <h3>Tabo Toba</h3>
+        <?php
+          $query = '  SELECT * FROM alamat ';
+          $result = $conn -> query($query);
+          $address = $result-> fetch_assoc();
+          
+          $alamat = $address['alamat'];   
+          $desa = $address['desa']; 
+          $kecamatan = $address['kecamatan']; 
+          $kabupaten = $address['kabupaten/kota']; 
+          $provinsi = $address['provinsi']; 
+          $kode_pos = $address['kode_pos'];                                          
+        ?>
         <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
+          <?php echo $address['alamat'] ?>,<br>
+          <?php echo $address['desa'] ?>,<br>
+          <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+          <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+        </p>
+        <?php
+          $query = '  SELECT nomor FROM nomor_telepon ';
+          $result = $conn -> query($query);
+          $no_telp = $result-> fetch_assoc();
+          
+          $nomor = $no_telp['nomor'];                                            
+        ?>
+        <p>
+          <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
         </p>
       </div>
 
@@ -301,8 +341,10 @@
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="assets/vendor/php-email-form/validate.js"></script>
 
+
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
+
     
     <script>
           function openForm() {

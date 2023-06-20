@@ -2,11 +2,12 @@
     include_once('config/autoload.php');
 
     if(isset($_GET['product_id'])) {
-        $product_id = $_GET['product_id'];
-        $query = "SELECT * FROM product WHERE product_id = $product_id";
-        $result = mysqli_query($conn, $query);
-        $product = mysqli_fetch_assoc($result);
-    }
+      $product_id = $_GET['product_id'];
+      $query = "SELECT * FROM product WHERE product_id = $product_id";
+      $result = mysqli_query($conn, $query);
+      $product = mysqli_fetch_assoc($result);
+  }
+
 ?>
 
 <!DOCTYPE html>
@@ -55,12 +56,20 @@
         <i class="bi bi-list mobile-nav-toggle mx-4"></i>
         <ul>
           <li><a href="index.php">Beranda</a></li>
-          <li><a href="produk.php">Produk</a></li>
+          <li><a class="active" href="produk.php">Produk</a></li>
           <li><a href="ulasan.php">Ulasan</a></li>
           <li><a href="tentang_tabotoba.php">Tentang Tabo Toba</a></li>
+          <?php
+              session_start();
+
+              if (isset($_SESSION['is_logged_in'])) {?>
+              <li><a href="keranjang.php"><i class="fa-solid fa-cart-shopping fa-2xl my-3" style="font-size: 20px;"></i></a></li>
+
+              <?php } 
+            ?>
+          
            
             <?php
-              session_start();
 
               if (!isset($_SESSION['is_logged_in'])){?>
                 <button class="masuk-btn ms-3" id="myBtn">
@@ -77,7 +86,7 @@
                       <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Username</label>
                         <input class="form-control" type ="text" maxlength="25" name="username">
-                      </div>  
+                      </div> 
 
                       <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -161,33 +170,64 @@
   </header><!-- End Header -->
 
   <main id="main">
-    
-    
-    <!-- ======= Product Details Section ======= -->
-    <section id="course-details" class="course-details mt-5 mb-0">
+  <?php
+  $username = $_SESSION['username'];
 
-      <!-- Breadcrumb -->
-        <section id="breadcrumb" class="breadcrumb mt-3">
-          <div class="container" data-aos="fade-up">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="produk.php">Produk</a></li>
-              <li class="breadcrumb-item active" aria-current="page"><?php echo $product['name_product']; ?></li>
-            </ol>
-          </div>
-        </section>
-      <!-- End Breadcrumb -->
+  $query = "SELECT role, user_id FROM user WHERE username='$username'";
+  $result = $conn->query($query);
 
-      <div class="container mt-3 mb-0 justify-content-center text-center" data-aos="fade-up">
-          <div class="row">
-            <div class="col-lg-6 mb-4">
-            <a data-fancybox="carousel" href="data:image/jpeg;base64, <?php echo base64_encode($product['img']); ?>">
-              <img src="data:image/jpeg;base64, <?php echo base64_encode($product['img']); ?>" class="img-fluid" width="400" alt="">
-            </a>
-          </div>
+  $data = $result->fetch_assoc();
+
+  if (isset($_GET['product_id'])) {
+    $product_id = $_GET['product_id'];
+    $query = "SELECT * FROM product WHERE product_id = $product_id";
+    $result = mysqli_query($conn, $query);
+    $product = mysqli_fetch_assoc($result);
+
+    if (isset($_POST['tambah_keranjang'])) {
+      // Assume $user_id is obtained from the logged-in user
+      $user_id = $data['user_id'];
+      $quantity = $_POST['quantity'];
+
+      // Insert the product into the cart
+      $insertQuery = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
+      $insertStmt = $conn->prepare($insertQuery);
+      $insertStmt->bind_param("iii", $user_id, $product_id, $quantity);
+
+      if ($insertStmt->execute()) {
+        // Redirect the user to the product details page after successful submission
+        header("Location: produk_detail.php?product_id=$product_id");
+        exit();
+      } 
+
+      $insertStmt->close();
+    }
+  }
+  ?>
+
+  <!-- ======= Product Details Section ======= -->
+  <section id="course-details" class="course-details mt-5 mb-0">
+    <!-- Breadcrumb -->
+    <section id="breadcrumb" class="breadcrumb mt-3">
+      <div class="container" data-aos="fade-up">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="produk.php">Produk</a></li>
+          <li class="breadcrumb-item active" aria-current="page"><?php echo $product['name_product']; ?></li>
+        </ol>
+      </div>
+    </section>
+    <!-- End Breadcrumb -->
+
+    <div class="container mt-3 mb-0 justify-content-center text-center" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-6 mb-4">
+          <a data-fancybox="carousel" href="data:image/jpeg;base64, <?php echo base64_encode($product['img']); ?>">
+            <img src="data:image/jpeg;base64, <?php echo base64_encode($product['img']); ?>" class="img-fluid" width="400" alt="">
+          </a>
+        </div>
         <div class="col-lg-4">
-
-    <!-- Galeri Section -->
-        <center>
+          <!-- Galeri Section -->
+          <center>
           <div class="container mt-1 mb-5 ms-auto" data-aos="fade-up">
             <div id="carouselExampleIndicators" class="carousel slide" style="width: 220px;" data-bs-ride="carousel">
               <ol class="carousel-indicators">
@@ -227,29 +267,41 @@
             </div>
           </div>
         </center>
-      <!-- End Galeri Section -->
-         
-            <div class="course-info d-flex justify-content-between align-items-center">
-              <h5>Berat</h5>
-              <p><?php echo $product['quantity']; ?>gr</p>
-            </div>
-            <div class="course-info d-flex justify-content-between align-items-center">
-              <h5>Harga</h5>
-              <p><?php echo $product['price_produk']; ?></p>
-            </div>
-            <h3><?php echo $product['name_product']; ?></h3>
-            <p class="mb-4">
-              <?php echo $product['description']; ?>
-            </p>
-            <a href="https://api.whatsapp.com/send/?phone=6281283857977&text&type=phone_number&app_absent=0" class="order-btn">
-                <i class="fab fa-whatsapp fa-2xl mx-2"></i> Pesan Melalui WhatsApp
-            </a>
+          <!-- End Galeri Section -->
+
+          <div class="course-info d-flex justify-content-between align-items-center">
+            <h5>Berat</h5>
+            <p><?php echo $product['quantity']; ?>gr</p>
           </div>
+          <div class="course-info d-flex justify-content-between align-items-center">
+            <h5>Harga</h5>
+            <p>Rp<?php echo number_format($product['price_produk']); ?></p>
+          </div>
+          <h3><?php echo $product['name_product']; ?></h3>
+          <p class="mb-4">
+            <?php echo $product['description']; ?>
+          </p>
+
+          <form method="POST">
+            <div class="row g-3 mt-3">
+              <div class="col-sm-4">
+                <p>Jumlah :</p>
+              </div>
+              <div class="col-sm">
+                <input type="number" class="form-control" name="quantity" min="1" value="1">
+              </div>
+            </div>            
+            <button type="submit" class="masuk-btn btn-lg pull-right mt-3" name="tambah_keranjang">
+              <i class="fa fa-cart-arrow-down me-2"></i> Tambah Ke Keranjang
+            </button>
+          </form>
+
         </div>
       </div>
-    
-      
-    </section>
+    </div>
+  </section>
+</main>
+
     <!-- End Product Details Section -->
 
 <section id="ulasan" class="ulasan"> 
@@ -275,31 +327,48 @@
 
           while($row = mysqli_fetch_assoc($result)){?>
 
-          <div class="swiper-slide">
-              <div class="ulasan-wrap">
-                  <div class="ulasan-item">
-                      <h3 class="ulasan-img"><i class="fa-regular fa-user fa-xl" style="color: black;"></i></h3>                        
-                      <h3><?php echo $row["username"];?></h3>
-                      <h4><?php echo $row["name_product"];?></h4>
-                      <p>
-                          <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                              <?php echo $row["review"];?>
-                          <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                      </p>
+          
+<div class="swiper-slide">
+                <div class="ulasan-wrap">
+                    <div class="ulasan-item">
+                      <div class="row">
+                        <div class="col-md-7">
+                        <h3 class="ulasan-img"><i class="fa-regular fa-user fa-xl" style="color: black;"></i></h3>
+                        <h3><?php echo $row["username"]; ?></h3>
+                        <h4><?php echo $row["name_product"]; ?></h4>
+                        <p class="review-text">
+                            <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                            <?php echo $row["review"]; ?>
+                            <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                        </p>
+                        <div class="star-rate">
+                            <?php
+                            $rating = $row['rate'];
+                            for ($i = 5; $i >= 1; $i--) {
+                                if ($rating >= $i) {
+                                    echo '<input class="ulasan" type="radio" name="rating" value="' . $i . '" id="rating-' . $i . '" checked disabled /><label for="rating-' . $i . '"></label>';
+                                } else {
+                                    echo '<input class="ulasan" type="radio" name="rating" value="' . $i . '" id="rating-' . $i . '" disabled /><label for="rating-' . $i . '"></label>';
+                                }
+                            }
+                            ?>
+                        </div>
+                        </div>
+                        <div class="col-md-5">
+                        <?php
+                        if (!empty($row['img'])){
+                        $image_path = 'assets\img\gambar ulasan '; // Replace with the actual path to the folder where the images are stored
+                        $image_filename = $row['img'];
+                        $image_src = $image_path . $image_filename;
+                        ?>
 
-                      <div class="star-rate">
-                          <?php
-                              $rating = $row['rate'];
-                              for ($i = 5; $i >= 1; $i--) {
-                                  if ($rating >= $i) {
-                                      echo '<input class="ulasan" type="radio"' . $i . '" name="rating" value="' . $i . '" id="rating-' . $i . '" checked disabled /><label for="rating-' . $i . '"></label>';
-                                  } 
-                              }
-                          ?>
-                      </div>
-                  </div>
-              </div>
-          </div><!-- End ulasan item -->
+                        <img src="<?php echo $image_src; ?>" class="img-fluid" >
+                        <?php } ?>
+                        </div>
+                      </div>                        
+                    </div>
+                </div>
+            </div><!-- End ulasan item -->
       <?php } ?>
     </div>
     <div class="swiper-pagination"></div> 
@@ -317,13 +386,33 @@
     <div class="row">
       <div class="col-lg-3 col-md-6 footer-contact">
         <h3>Tabo Toba</h3>
+        <?php
+          $query = '  SELECT * FROM alamat ';
+          $result = $conn -> query($query);
+          $address = $result-> fetch_assoc();
+          
+          $alamat = $address['alamat'];   
+          $desa = $address['desa']; 
+          $kecamatan = $address['kecamatan']; 
+          $kabupaten = $address['kabupaten/kota']; 
+          $provinsi = $address['provinsi']; 
+          $kode_pos = $address['kode_pos'];                                          
+        ?>
         <p>
-          Jl. Ps. Melintang, <br>
-          Tambunan Lumban Pea, Aruan<br>
-          Kec. Balige, Tobasa, <br>
-          Sumatera Utara 20371<br><br>
-          <strong>Phone 1:</strong> +62 82277635600<br>
-          <strong>Phone 2:</strong> +62 81283857977<br>
+          <?php echo $address['alamat'] ?>,<br>
+          <?php echo $address['desa'] ?>,<br>
+          <?php echo $address['kecamatan'] ?>, <?php echo $address['kabupaten/kota'] ?>, <br>
+          <?php echo $address['provinsi'] ?>, <?php echo $address['kode_pos'] ?><br><br>          
+        </p>
+        <?php
+          $query = '  SELECT nomor FROM nomor_telepon ';
+          $result = $conn -> query($query);
+          $no_telp = $result-> fetch_assoc();
+          
+          $nomor = $no_telp['nomor'];                                            
+        ?>
+        <p>
+          <strong>Phone:</strong> 0<?php echo $no_telp['nomor']?><br>
         </p>
       </div>
 
@@ -386,6 +475,10 @@
   .order-btn:hover {
     background-color: #128C7E;
     color: #FFFFFF;
+  }
+
+  .review-text {
+     overflow-wrap: break-word;
   }
   </style>
 </body>
